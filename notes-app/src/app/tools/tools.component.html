@@ -1,0 +1,7 @@
+<p [style.background-color] = 'colorName'>
+    Is this {{inputField}}?
+</p>
+<button (click)='ChangeColor()' mat-icon-button><mat-icon>add</mat-icon></button>
+<mat-form-field>
+    <input matInput [(ngModel)]="inputField" placeholder="Color">
+</mat-form-field>
