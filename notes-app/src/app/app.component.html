@@ -1,3 +1,19 @@
 <app-dummycomponent1></app-dummycomponent1>
 <app-dummycomponent2></app-dummycomponent2>
 <app-tools></app-tools>
+<p >
+    Date {{ dateTest | date:"longTime" | lowercase}}.
+</p>
+<p >
+    A number : {{myValue | addValue: 28}}
+</p>
+<div *ngFor="let element of stringList; let i = index; let condition = even">
+    <p *ngIf="condition">
+        At index {{i}} there is the string {{ element | uppercase}}
+    </p>
+</div>
+<div *ngFor="let element of dateList; let i = index">
+    <p *ngIf="i % 2 != 0">
+        At index {{i}} there is the date {{ element | date:"longDate" | uppercase}}
+    </p>
+</div>

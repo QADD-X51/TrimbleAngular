@@ -12,11 +12,13 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
 import { Dummy1Module } from './dummy1/dummy1.module';
 import { ToolsComponent } from './tools/tools.component';
+import { AddValuePipe } from './add-value.pipe';
 
 @NgModule({
   declarations: [
     AppComponent,
-    ToolsComponent
+    ToolsComponent,
+    AddValuePipe
   ],
   imports: [
     BrowserModule,
