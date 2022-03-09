@@ -9,17 +9,24 @@ import {MatIconModule} from '@angular/material/icon';
 import {MatInputModule} from '@angular/material/input';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatCardModule} from '@angular/material/card';
+import { FormsModule } from '@angular/forms';
 
 import { NoteComponent } from './note/note.component';
 import { ToolsComponent } from './tools/tools.component';
 import { FilterComponent } from './filter/filter.component';
+import { AddNoteComponent } from './add-note/add-note.component';
+import { HomeComponent } from './home/home.component';
+import { DummyrouteComponent } from './dummyroute/dummyroute.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     NoteComponent,
     ToolsComponent,
-    FilterComponent
+    FilterComponent,
+    AddNoteComponent,
+    HomeComponent,
+    DummyrouteComponent
   ],
   imports: [
     BrowserModule,
@@ -29,7 +36,8 @@ import { FilterComponent } from './filter/filter.component';
     MatIconModule,
     MatInputModule,
     MatFormFieldModule,
-    MatCardModule
+    MatCardModule,
+    FormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]

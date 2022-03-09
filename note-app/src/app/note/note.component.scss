@@ -1,0 +1,10 @@
+.note-wrap {
+    display:flex;
+    .note{
+        margin-left: 10px;
+        max-width: 150px;
+        min-height: 150px;
+        align-items: center;
+        justify-content: left;
+    }
+}
