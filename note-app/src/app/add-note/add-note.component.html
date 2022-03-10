@@ -34,6 +34,15 @@
       
 </form>
   
+
+<mat-form-field appearance="fill">
+  <mat-label>Category</mat-label>
+  <select matNativeControl required>
+    <option value="To Do">To Do</option>
+    <option value="Done">Done</option>
+    <option value="Doing">Doing</option>
+  </select>
+</mat-form-field>
   
-<button mat-button>Add</button>
+<button mat-button (click)="AddClick()">Add</button>
   

@@ -1,9 +1,9 @@
 .note-wrap {
     display:flex;
     .note{
+        width: 150px;
+        height: 150px;
         margin-left: 10px;
-        max-width: 150px;
-        min-height: 150px;
         align-items: center;
         justify-content: left;
     }

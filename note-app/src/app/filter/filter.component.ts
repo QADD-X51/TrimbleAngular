@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Category } from '../category';
+import { FilterService } from '../services/filter.service';
 
 @Component({
   selector: 'app-filter',
@@ -8,15 +9,12 @@ import { Category } from '../category';
 })
 export class FilterComponent implements OnInit {
 
-  categories: Array<Category> = [
-    {name:'To Do', id:'1'},
-    {name:'Done', id:'2'},
-    {name:'Doing', id:'3'}
-  ]
+  categories: Array<Category>;
 
-  constructor() { }
+  constructor(private service:FilterService) { }
 
   ngOnInit(): void {
+    this.categories = this.service.getCategories();
   }
 
 }
