@@ -1,16 +1,14 @@
-<span class="note-wrap">
-    <div class="note" *ngFor="let element of notes">
-        <mat-card>
 
-            <mat-card-header>
-                 {{element.title}}
-            </mat-card-header>
+<div class="note" *ngFor="let element of notes">
+   <mat-card>
+       <mat-card-header>
+            {{element.title}}
+       </mat-card-header>
+
+       <mat-card-content>
+            {{element.description}}
+       </mat-card-content>
   
-            <mat-card-content>
-                 {{element.description}}
-            </mat-card-content>
-  
-         </mat-card>
-      
-    </div>
-</span>
+    </mat-card>    
+</div>
+

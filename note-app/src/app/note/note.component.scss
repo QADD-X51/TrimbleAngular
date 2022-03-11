@@ -1,10 +1,15 @@
-.note-wrap {
-    display:flex;
-    .note{
+
+.note{
+    display:inline-flex;
+    flex-direction: row;
+    align-items: flex-start;    
+    justify-content: center;
+    margin-left: 15px;
+    margin-bottom: 15px;
+    
+    mat-card{
         width: 150px;
         height: 150px;
-        margin-left: 10px;
-        align-items: center;
-        justify-content: left;
+        background-color: rgb(90, 57, 235);
     }
 }
