@@ -13,6 +13,7 @@ export class NoteComponent implements OnInit, OnChanges {
   notes: Array<Note>;
 
   @Input() selectedCategoryId: string;
+  @Input() selectedSearchFilter: string;
 
   constructor( private service: NoteService) { }
 
@@ -22,9 +23,15 @@ export class NoteComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(): void {
+
     console.log(this.selectedCategoryId);
     if (this.selectedCategoryId) {
       this.notes = this.service.getFiltredNotes(this.selectedCategoryId);
+    }
+
+    console.log(this.selectedSearchFilter);
+    if(this.selectedSearchFilter){
+      this.notes = this.service.getSearchFiltered(this.selectedSearchFilter);
     }
 
   }

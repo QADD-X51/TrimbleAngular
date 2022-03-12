@@ -54,4 +54,8 @@ export class NoteService {
     // })
     return this.notes.filter(note => note.categoryId === categoryId);
   }
+
+  getSearchFiltered(input: string) {
+    return this.notes.filter(note => note.title.includes(input) === true);
+  }
 }

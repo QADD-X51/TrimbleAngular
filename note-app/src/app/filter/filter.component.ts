@@ -10,8 +10,10 @@ import { FilterService } from '../services/filter.service';
 export class FilterComponent implements OnInit {
 
   @Output() emitSelectedFilter = new EventEmitter<string>();
+  @Output() emitSearchFilter = new EventEmitter<string>();
 
   categories: Array<Category>;
+  search: string = "";
 
   constructor(private service:FilterService) { }
 
@@ -21,6 +23,10 @@ export class FilterComponent implements OnInit {
 
   selectFilter(categoryId: string) {
     this.emitSelectedFilter.emit(categoryId);
+  }
+
+  selectSearchFilter() {
+    this.emitSearchFilter.emit(this.search);
   }
 
 }

@@ -1,7 +1,7 @@
 <div class="all-items">
-    <app-filter (emitSelectedFilter)="receiveCategory($event)"></app-filter>
+    <app-filter (emitSelectedFilter)="receiveCategory($event)" (emitSearchFilter)="recieveSearchInput($event)"></app-filter>
     <div class="main-items">
-        <app-note [selectedCategoryId]="categoryId"></app-note>
+        <app-note [selectedCategoryId]="categoryId" [selectedSearchFilter]="search"></app-note>
         <app-tools></app-tools>
     </div>  
 </div>

@@ -7,3 +7,14 @@
         margin: 15px;
     }
 }
+
+.search-container{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+
+    p{
+        margin-right: 10px;
+    }
+
+}

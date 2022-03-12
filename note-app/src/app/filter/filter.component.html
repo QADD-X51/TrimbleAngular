@@ -3,4 +3,18 @@
         <button (click)="selectFilter(category.id)" mat-raised-button color = "primary">{{category.name | uppercase}}</button>
     </div>
 </div>
+<div class="search-container">
+    <p>Search title:</p>
+    <form>
+        <mat-form-field>
+        <input
+            matInput
+            name="inputSearch"
+            [(ngModel)] = "search"
+            #inputSearch = "ngModel"
+            (change)="selectSearchFilter()"
+             />
+        </mat-form-field>
+    </form>
+</div>
 

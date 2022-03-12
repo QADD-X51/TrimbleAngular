@@ -8,6 +8,7 @@ import { Component, OnInit } from '@angular/core';
 export class HomeComponent implements OnInit {
 
   categoryId: string;
+  search: string;
 
   constructor() { }
 
@@ -19,5 +20,9 @@ export class HomeComponent implements OnInit {
     console.log(this.categoryId);
   }
 
-
+  recieveSearchInput(input: string){
+    if(input == "")
+      input = undefined;
+    this.search = input;
+  }
 }
