@@ -17,6 +17,10 @@ import { FilterComponent } from './filter/filter.component';
 import { AddNoteComponent } from './add-note/add-note.component';
 import { HomeComponent } from './home/home.component';
 import { DummyrouteComponent } from './dummyroute/dummyroute.component';
+import { CommonModule } from '@angular/common';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { HttpMockApiInterceptor } from './services/http-mock-api.interceptor';
+import {MatSelectModule} from '@angular/material/select';
 
 @NgModule({
   declarations: [
@@ -37,9 +41,17 @@ import { DummyrouteComponent } from './dummyroute/dummyroute.component';
     MatInputModule,
     MatFormFieldModule,
     MatCardModule,
-    FormsModule
+    FormsModule,
+    CommonModule,
+    HttpClientModule,
+    MatSelectModule
   ],
-  providers: [],
+  providers: [{
+    provide: HTTP_INTERCEPTORS,
+    useClass: HttpMockApiInterceptor,
+    multi: true
+  }
+],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

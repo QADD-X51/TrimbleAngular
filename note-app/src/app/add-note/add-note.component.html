@@ -35,14 +35,13 @@
 </form>
   
 
-<mat-form-field appearance="fill">
-  <mat-label>Category</mat-label>
-  <select matNativeControl required>
-    <option value="To Do">To Do</option>
-    <option value="Done">Done</option>
-    <option value="Doing">Doing</option>
-  </select>
-</mat-form-field>
+<mat-form-field >
+  <mat-label>Choose a category </mat-label>
+  <mat-select [(ngModel)]="idCategoryNote" *ngIf="categories">
+      <mat-option *ngFor="let categ of categories" [value]="categ.id">{{categ.name}}</mat-option>
+  </mat-select>
+</mat-form-field> 
+
   
 <button mat-button (click)="AddClick()">Add</button>
   

@@ -11,5 +11,8 @@
         width: 150px;
         height: 150px;
         background-color: rgb(90, 57, 235);
+        mat-card-content{
+            font-size: 13px;
+        }
     }
 }
