@@ -8,7 +8,10 @@
        <mat-card-content>
             {{element.description}}
        </mat-card-content>
-  
+       <div class ="buttons">
+          <button mat-icon-button routerLink="add-note/{{element.id}}"><mat-icon>settings</mat-icon></button>
+          <button mat-icon-button (click)="DeleteNote(element.id)"><mat-icon>delete</mat-icon></button>
+       </div>
     </mat-card>    
 </div>
 

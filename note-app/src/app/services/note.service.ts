@@ -36,7 +36,6 @@ export class NoteService {
     })
   };
 
-
   constructor(private httpClient: HttpClient) { }
 
   serviceCall() {
@@ -47,23 +46,50 @@ export class NoteService {
     return this.httpClient.get<Array<Note>>(this.baseUrl + "/notes", this.httpOptions);
   }
 
+  getNote(ID:string){
+    return this.httpClient.get<Array<Note>>(this.baseUrl + "/notes", this.httpOptions).pipe(map((notes:Array<Note>) =>
+      { return notes.filter(note => note.id === ID)}));
+  }
+
   getFiltredNotes(categoryId: string): Observable<Array<Note>> {
     return this.httpClient.get<Array<Note>>(this.baseUrl + "/notes",this.httpOptions).pipe(map((notes:Array<Note>) => 
       { return notes.filter(note => note.categoryId === categoryId); }));
   }
 
   addNote(inputTitle: string, inputDescription:string, inputCategory:string = '0') {
-    let lastID = this.httpClient.get<Array<Note>>(this.baseUrl + "/notes", this.httpOptions).pipe(map((notes:Array<Note>) => 
+    
+    let subscribeID = this.httpClient.get<Array<Note>>(this.baseUrl + "/notes",this.httpOptions).pipe(map((notes:Array<Note>) => 
     { return notes[notes.length - 1].id.substring(2); }));
-    let lastIDstr: string; 
-    lastID.subscribe((input:string) => {input = lastIDstr});
+    let lastID:string;
+
+    subscribeID.subscribe((input:string) => {lastID = input});
+
     let note: Note = { 
-      id: "Id" + (parseInt(lastIDstr) + 1).toString,
+      id: "Id" + (parseInt(lastID) + 1).toString(),
       title: inputTitle,
       description: inputDescription,
       categoryId: inputCategory
     }
+    console.log(note.id);
     return this.httpClient.post(this.baseUrl + "/notes", note, this.httpOptions);
+  }
+
+  editNote(inputID: string,inputTitle: string, inputDescription:string, inputCategory:string = '0') {
+    
+    let note: Note = { 
+      id: inputID,
+      title: inputTitle,
+      description: inputDescription,
+      categoryId: inputCategory
+    }
+
+    return this.httpClient.put(this.baseUrl + "/notes/" + inputID, note ,this.httpOptions)
+  }
+
+  removeNote(inputID:string)
+  {
+    console.log(inputID);
+    return this.httpClient.delete(this.baseUrl + '/notes/' + inputID, this.httpOptions);
   }
 
   //these funtions were used when notes was array was kept internally in TS

@@ -21,6 +21,7 @@ import { CommonModule } from '@angular/common';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { HttpMockApiInterceptor } from './services/http-mock-api.interceptor';
 import {MatSelectModule} from '@angular/material/select';
+import { EditNoteComponent } from './edit-note/edit-note.component';
 
 @NgModule({
   declarations: [
@@ -30,7 +31,8 @@ import {MatSelectModule} from '@angular/material/select';
     FilterComponent,
     AddNoteComponent,
     HomeComponent,
-    DummyrouteComponent
+    DummyrouteComponent,
+    EditNoteComponent
   ],
   imports: [
     BrowserModule,
