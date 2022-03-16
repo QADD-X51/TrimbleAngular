@@ -36,6 +36,7 @@ export class NoteComponent implements OnInit, OnChanges {
     console.log(this.selectedSearchFilter);
     if(this.selectedSearchFilter){
       //this.notes = this.service.getSearchFiltered(this.selectedSearchFilter);
+      this.service.getSearchFiltered(this.selectedSearchFilter).subscribe((notes:Array<Note>) => {this.notes = notes});
     }
 
   }

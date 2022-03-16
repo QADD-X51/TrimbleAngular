@@ -92,6 +92,11 @@ export class NoteService {
     return this.httpClient.delete(this.baseUrl + '/notes/' + inputID, this.httpOptions);
   }
 
+  getSearchFiltered(input: string) {
+    return this.httpClient.get<Array<Note>>(this.baseUrl + "/notes",this.httpOptions).pipe(map((notes:Array<Note>) => 
+    { return notes.filter(note => (note.title.includes(input) || note.description.includes(input)) === true); }));
+  }
+
   //these funtions were used when notes was array was kept internally in TS
 
   // getNotes(): Note[] {
