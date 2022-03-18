@@ -1,0 +1,80 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>NotesAPI</name>
+    </assembly>
+    <members>
+        <member name="M:NotesAPI.Controllers.CategoryController.GetAllCategories">
+            <summary>
+            Gets the whole list of categories
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:NotesAPI.Controllers.CategoryController.GetCategories(System.String)">
+            <summary>
+            Gets only the categories with a certain ID 
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:NotesAPI.Controllers.CategoryController.AddCategories(NotesAPI.Models.Category)">
+            <summary>
+            Adds a new category to the categories list
+            </summary>
+            <param name="category"></param>
+            <returns></returns>
+        </member>
+        <member name="M:NotesAPI.Controllers.CategoryController.RemoveCategories(System.String)">
+            <summary>
+            Will delete all the categories with a specified ID
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:NotesAPI.Controllers.NotesController.GetNotes">
+            <summary>
+            Gets all notes
+            </summary>
+            <return></return>
+        </member>
+        <member name="M:NotesAPI.Controllers.NotesController.GetNotesByOwner(System.Guid)">
+            <summary>
+            Get all notes of a certain owner
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:NotesAPI.Controllers.NotesController.GetNotesID(System.Guid)">
+            <summary>
+            Get all notes with a certain ID
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:NotesAPI.Controllers.NotesController.CreateNotes(NotesAPI.Models.Note)">
+            <summary>
+            Creates a new note
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:NotesAPI.Controllers.OwnerController.GetOwners">
+            <summary>
+            Gets all the owners
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:NotesAPI.Controllers.OwnerController.AddOwner(NotesAPI.Models.Owner)">
+            <summary>
+            Adds a new owner to the owner list
+            </summary>
+            <param name="owner"></param>
+            <returns></returns>
+        </member>
+        <member name="M:NotesAPI.Controllers.WeatherForecastController.Get">
+            <summary>
+            Gets the weather
+            </summary>
+            <returns></returns>
+        </member>
+    </members>
+</doc>

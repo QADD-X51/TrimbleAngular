@@ -1,0 +1,15 @@
+{
+  "version": 2,
+  "dgSpecHash": "uxJQ4w27xyF8et9ksJ7RZsOqLxS46l34+bOxisDBA7YA1W1a4lycagNht08csV9h6JfPrI5MAuyhgQ8ezEnwUw==",
+  "success": true,
+  "projectFilePath": "D:\\WIP\\Repos\\TrimbleAngular\\NotesAPI\\NotesAPI\\NotesAPI.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\QADD\\.nuget\\packages\\microsoft.extensions.apidescription.server\\3.0.0\\microsoft.extensions.apidescription.server.3.0.0.nupkg.sha512",
+    "C:\\Users\\QADD\\.nuget\\packages\\microsoft.openapi\\1.2.3\\microsoft.openapi.1.2.3.nupkg.sha512",
+    "C:\\Users\\QADD\\.nuget\\packages\\swashbuckle.aspnetcore\\6.3.0\\swashbuckle.aspnetcore.6.3.0.nupkg.sha512",
+    "C:\\Users\\QADD\\.nuget\\packages\\swashbuckle.aspnetcore.swagger\\6.3.0\\swashbuckle.aspnetcore.swagger.6.3.0.nupkg.sha512",
+    "C:\\Users\\QADD\\.nuget\\packages\\swashbuckle.aspnetcore.swaggergen\\6.3.0\\swashbuckle.aspnetcore.swaggergen.6.3.0.nupkg.sha512",
+    "C:\\Users\\QADD\\.nuget\\packages\\swashbuckle.aspnetcore.swaggerui\\6.3.0\\swashbuckle.aspnetcore.swaggerui.6.3.0.nupkg.sha512"
+  ],
+  "logs": []
+}
