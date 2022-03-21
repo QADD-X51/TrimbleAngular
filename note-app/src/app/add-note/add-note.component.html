@@ -42,6 +42,8 @@
   </mat-select>
 </mat-form-field> 
 
-  
-<button mat-button (click)="AddClick()">Add</button>
+<div *ngIf="!(inputNote.invalid)">
+  <button mat-button (click)="AddClick()">Add</button>
+</div>
+
   
