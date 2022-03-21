@@ -14,12 +14,15 @@ namespace NotesAPI.Controllers
     {
         public NotesController() { }
 
-        static List<Note> _notes = new List<Note> { new Note { Id = Guid.NewGuid(), CategoryId = "3", OwnerId = Guid.NewGuid(), Title = "First Stage", Description = "First Note Description - Denial" },
-        new Note { Id = Guid.NewGuid(), CategoryId = "3", OwnerId = Guid.NewGuid(), Title = "Second Stage", Description = "Second Note Description - Anger" },
-        new Note { Id = Guid.NewGuid(), CategoryId = "3", OwnerId = Guid.NewGuid(), Title = "Third Stage", Description = "Third Note Description - Bargaining" },
-        new Note { Id = Guid.NewGuid(), CategoryId = "2", OwnerId = Guid.NewGuid(), Title = "Fourth Stage", Description = "Fourth Note Description - Depression" },
-        new Note { Id = Guid.NewGuid(), CategoryId = "1", OwnerId = Guid.NewGuid(), Title = "Fifth Stage", Description = "Fifth Note Description - Acceptance" }
+        private static List<Note> _notes = new List<Note> 
+        { 
+            new Note { Id = new Guid("00000000-0000-0000-0000-000000000001"), CategoryId = "1", OwnerId = new Guid("00000000-0000-0000-0000-000000000001"), Title = "First Note", Description = "First Note Description" },
+            new Note { Id = new Guid("00000000-0000-0000-0000-000000000002"), CategoryId = "1", OwnerId = new Guid("00000000-0000-0000-0000-000000000001"), Title = "Second Note", Description = "Second Note Description" },
+            new Note { Id = new Guid("00000000-0000-0000-0000-000000000003"), CategoryId = "1", OwnerId = new Guid("00000000-0000-0000-0000-000000000001"), Title = "Third Note", Description = "Third Note Description" },
+            new Note { Id = new Guid("00000000-0000-0000-0000-000000000004"), CategoryId = "1", OwnerId = new Guid("00000000-0000-0000-0000-000000000001"), Title = "Fourth Note", Description = "Fourth Note Description" },
+            new Note { Id = new Guid("00000000-0000-0000-0000-000000000005"), CategoryId = "1", OwnerId = new Guid("00000000-0000-0000-0000-000000000001"), Title = "Fifth Note", Description = "Fifth Note Description" }
         };
+
 
 
         /// <summary>
@@ -63,10 +66,128 @@ namespace NotesAPI.Controllers
         /// <returns></returns>
 
         [HttpPost]
-        public IActionResult CreateNotes([FromBody] Note note)
+        public IActionResult CreateNote([FromBody] Note note)
         {
+            if(note == null)
+            {
+                return BadRequest("Note should not be null");
+            }
             _notes.Add(note);
             return Ok(note);
+        }
+
+        /// <summary>
+        /// Updates the note with a certain ID
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+
+        [HttpPut("{id}")]
+        public IActionResult UpdateNote(Guid id, [FromBody]Note note)
+        {
+            if(note == null)
+            {
+                return BadRequest("Note should not be null");
+            }
+
+            int index = _notes.FindIndex(n => n.Id == id);
+
+            if(index == -1)
+            {
+                //return NotFound("Note ID not found");
+                return CreateNote(note);
+            }
+
+            note.Id = id;
+            _notes[index] = note;
+            return Ok(_notes);
+        }
+
+        /// <summary>
+        /// Deletes the note with that certain ID
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+
+        [HttpDelete("{id}")]
+        public IActionResult DeleteNote(Guid id)
+        {
+            int index = _notes.FindIndex(n => n.Id == id);
+
+            if(index == -1)
+            {
+                return NotFound("Note not found");
+            }
+
+            _notes.RemoveAt(index);
+            return Ok(_notes);
+        }
+
+        /// <summary>
+        /// Updates the note with a certain ID, of a certain owner's ID. Owner's ID comes first, than the note's.
+        /// </summary>
+        /// <param name="idOwner"></param>
+        /// <param name="idNote"></param>
+        /// <param name="note"></param>
+        /// <returns></returns>
+
+        [HttpPut("{idOwner}/{idNote}")]
+        public IActionResult UpdateNoteAdvanced(Guid idOwner, Guid idNote, [FromBody]Note note)
+        {
+            if (note == null)
+            {
+                return BadRequest("Updated note should not be null");
+            }
+
+            int index = _notes.FindIndex(n => n.Id == idNote && n.OwnerId == idOwner);
+
+            if (index == -1)
+            {
+                return NotFound("Note not found");
+            }
+
+            note.Id = idNote;
+            note.OwnerId = idOwner;
+            _notes[index] = note;
+            return Ok(_notes);
+        }
+
+        /// <summary>
+        /// Deletes a note with the input ID, of a certain owner's ID. Owner's ID comes first, than the note's.
+        /// </summary>
+        /// <param name="idOwner"></param>
+        /// <param name="idNote"></param>
+        /// <returns></returns>
+
+        [HttpDelete("{idOwner}/{idNote}")]
+        public IActionResult DeleteNoteAdvanced(Guid idOwner, Guid idNote)
+        {
+            int index = _notes.FindIndex(n => n.Id == idNote && n.OwnerId == idOwner);
+
+            if (index == -1)
+            {
+                return NotFound("Note not found");
+            }
+
+            _notes.RemoveAt(index);
+            return Ok(_notes);
+        }
+
+        /// <summary>
+        /// Deletes all notes of an owner
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+
+        [HttpDelete("owner:{id}")]
+        public IActionResult DeleteAllNotesOfOwner(Guid id)
+        {
+            if(_notes.RemoveAll(note => note.OwnerId == id) == 0)
+            {
+                return NotFound("Owner has no notes");
+            }
+
+            return Ok(_notes);
         }
     }
 }

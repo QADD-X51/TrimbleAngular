@@ -42,5 +42,53 @@ namespace NotesAPI.Controllers
             _owners.Add(owner);
             return Ok(owner);
         }
+
+        /// <summary>
+        /// Updates an owner with a certain ID
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="owner"></param>
+        /// <returns></returns>
+
+        [HttpPut("{id}")]
+        public IActionResult UpdateOwner(Guid id, [FromBody] Owner owner)
+        {
+            if(owner == null)
+            {
+                return BadRequest("Owner shall not be null");
+            }
+
+            int index = _owners.FindIndex(ownr => ownr.Id == id);
+
+            if(index == -1)
+            {
+                return NotFound("Owner not found");
+            }
+
+            owner.Id = id;
+            _owners[index] = owner;
+
+            return Ok(_owners);
+        }
+
+        /// <summary>
+        /// Delets the owner with the specified ID
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+
+        [HttpDelete("{id}")]
+        public IActionResult RemoveOwner(Guid id)
+        {
+            int index = _owners.FindIndex(ownr => ownr.Id == id);
+
+            if (index == -1)
+            {
+                return NotFound("Owner not found");
+            }
+
+            _owners.RemoveAt(index);
+            return Ok(_owners);
+        }
     }
 }
