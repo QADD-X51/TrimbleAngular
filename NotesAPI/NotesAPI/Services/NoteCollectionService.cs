@@ -1,4 +1,7 @@
-﻿using NotesAPI.Models;
+﻿using MongoDB.Bson;
+using MongoDB.Driver;
+using NotesAPI.Models;
+using NotesAPI.Settings;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,101 +11,103 @@ namespace NotesAPI.Services
 {
     public class NoteCollectionService : INoteCollectionService
     {
+        private readonly IMongoCollection<Note> _notes;
 
-        private static List<Note> _notes = new List<Note>
+        public NoteCollectionService(IMongoDBSettings settings)
         {
-            new Note { Id = new Guid("00000000-0000-0000-0000-000000000001"), CategoryId = "1", OwnerId = new Guid("00000000-0000-0000-0000-000000000001"), Title = "First Note", Description = "First Note Description" },
-            new Note { Id = new Guid("00000000-0000-0000-0000-000000000002"), CategoryId = "1", OwnerId = new Guid("00000000-0000-0000-0000-000000000001"), Title = "Second Note", Description = "Second Note Description" },
-            new Note { Id = new Guid("00000000-0000-0000-0000-000000000003"), CategoryId = "1", OwnerId = new Guid("00000000-0000-0000-0000-000000000001"), Title = "Third Note", Description = "Third Note Description" },
-            new Note { Id = new Guid("00000000-0000-0000-0000-000000000004"), CategoryId = "1", OwnerId = new Guid("00000000-0000-0000-0000-000000000001"), Title = "Fourth Note", Description = "Fourth Note Description" },
-            new Note { Id = new Guid("00000000-0000-0000-0000-000000000005"), CategoryId = "1", OwnerId = new Guid("00000000-0000-0000-0000-000000000001"), Title = "Fifth Note", Description = "Fifth Note Description" }
-        };
+            var client = new MongoClient(settings.ConnectionString);
+            var database = client.GetDatabase(settings.DatabaseName);
 
-        public bool Create(Note note)
-        {
-            _notes.Add(note);
-            return true;
+            _notes = database.GetCollection<Note>(settings.NoteCollectionName);
+
         }
 
-        public bool Delete(Guid id)
+        public async Task<List<Note>> GetAll()
         {
-            int index = _notes.FindIndex(note => note.Id == id);
-            if(index == -1)
-            {
-                return false;
-            }
-            _notes.RemoveAt(index);
-            return true;
+            var result = await _notes.FindAsync(note => true);
+            return result.ToList();
         }
 
-        public Note Get(Guid id)
+        public async Task<Note> Get(Guid id)
         {
-            int index = _notes.FindIndex(note => note.Id == id);
-            if (index == -1)
+            var result = await _notes.FindAsync(note => note.Id == id);
+            if(result.ToList().Count == 0)
             {
                 throw new Exception("Not Found");
             }
-            return _notes[index];
+            return result.ToList()[0];
         }
 
-        public List<Note> GetAll()
+        public async Task<bool> Create(Note note)
         {
-            return _notes;
-        }
-
-        public List<Note> GetNotesByOwner(Guid ownerId)
-        {
-            return _notes.FindAll(note => note.OwnerId == ownerId);
-        }
-
-        public bool Update(Guid id, Note note)
-        {
-
-            int index = _notes.FindIndex(n => n.Id == id);
-            if (index == -1)
-            {
-                return false;
-            }
-
-            note.Id = id;
-            _notes[index] = note;
+            await _notes.InsertOneAsync(note);
             return true;
         }
 
-        public bool UpdateAdvanced(Guid ownerId, Guid noteId, Note note)
+        public async Task<bool> Update(Guid id, Note note)
         {
-            int index = _notes.FindIndex(n => n.Id == noteId && n.OwnerId == ownerId);
-            if (index == -1)
+            note.Id = id;
+            var result = await _notes.ReplaceOneAsync(n => n.Id == id, note);
+
+            if (!result.IsAcknowledged || result.ModifiedCount == 0)
             {
+                await _notes.InsertOneAsync(note);
                 return false;
             }
 
+            return true;
+
+        }
+
+        public async Task<bool> Delete(Guid id)
+        {
+            var result = await _notes.DeleteOneAsync(note => note.Id == id);
+            if (!result.IsAcknowledged || result.DeletedCount == 0)
+            {
+                return false;
+            }
+            return true;
+        }
+
+        public async Task<List<Note>> GetNotesByOwner(Guid ownerId)
+        {
+            return (await _notes.FindAsync(note => note.OwnerId == ownerId)).ToList();
+        }
+
+        public async Task<bool> UpdateAdvanced(Guid ownerId, Guid noteId, Note note)
+        {
             note.Id = noteId;
             note.OwnerId = ownerId;
-            _notes[index] = note;
-            return true;
-        }
+            var result = await _notes.ReplaceOneAsync(n => n.Id == noteId && n.OwnerId == ownerId, note);
 
-        public bool DeleteNoteAdvanced(Guid ownerId, Guid noteId)
-        {
-            int index = _notes.FindIndex(n => n.Id == noteId && n.OwnerId == ownerId);
-            if (index == -1)
+            if (!result.IsAcknowledged || result.ModifiedCount == 0)
             {
-                return false;
-            }
-
-            _notes.RemoveAt(index);
-            return true;
-        }
-
-        public bool DeleteAllNotesOfUser(Guid id)
-        {
-            if (_notes.RemoveAll(note => note.OwnerId == id) == 0)
-            {
+                await _notes.InsertOneAsync(note);
                 return false;
             }
 
             return true;
         }
+
+        public async Task<bool> DeleteNoteAdvanced(Guid ownerId, Guid noteId)
+        {
+            var result = await _notes.DeleteOneAsync(note => note.Id == noteId && note.OwnerId == ownerId);
+            if (!result.IsAcknowledged || result.DeletedCount == 0)
+            {
+                return false;
+            }
+            return true;
+        }
+
+        public async Task<bool> DeleteAllNotesOfUser(Guid id)
+        {
+            var result = await _notes.DeleteManyAsync(note => note.OwnerId == id);
+            if (!result.IsAcknowledged || result.DeletedCount == 0)
+            {
+                return false;
+            }
+            return true;
+        }
+
     }
 }

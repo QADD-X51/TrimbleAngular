@@ -9,13 +9,13 @@ namespace NotesAPI.Services
     public interface INoteCollectionService : ICollectionService<Note>
     {
 
-        List<Note> GetNotesByOwner(Guid ownerId);
+        Task<List<Note>> GetNotesByOwner(Guid ownerId);
 
-        public bool UpdateAdvanced(Guid ownerId, Guid noteId, Note note);
+        public Task<bool> UpdateAdvanced(Guid ownerId, Guid noteId, Note note);
 
-        public bool DeleteNoteAdvanced(Guid ownerId, Guid noteId);
+        public Task<bool> DeleteNoteAdvanced(Guid ownerId, Guid noteId);
 
-        public bool DeleteAllNotesOfUser(Guid id);
+        public Task<bool> DeleteAllNotesOfUser(Guid id);
 
     }
 }

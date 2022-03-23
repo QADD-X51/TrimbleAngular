@@ -6,7 +6,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using NotesAPI.Services;
+using NotesAPI.Settings;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -28,6 +30,12 @@ namespace NotesAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.Configure<MongoDBSettings>(Configuration.GetSection(nameof(MongoDBSettings)));
+            services.AddSingleton<IMongoDBSettings>(sp => sp.GetRequiredService<IOptions<MongoDBSettings>>().Value);
+
+            services.Configure<MongoDBOwnerSettings>(Configuration.GetSection(nameof(MongoDBOwnerSettings)));
+            services.AddSingleton<IMongoDBOwnerSettings>(sp => sp.GetRequiredService<IOptions<MongoDBOwnerSettings>>().Value);
+
             services.AddSwaggerGen(c => {
                 var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
                 var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
