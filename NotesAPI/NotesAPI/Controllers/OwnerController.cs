@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using NotesAPI.Models;
+using NotesAPI.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,12 +13,13 @@ namespace NotesAPI.Controllers
     [ApiController]
     public class OwnerController : ControllerBase
     {
-        static List<Owner> _owners = new List<Owner>
+        IOwnerCollectionService _ownerCollectionService;
+
+        public OwnerController(IOwnerCollectionService ownerCollectionService)
         {
-            new Owner {Name = "Eu Nutu", Id = Guid.NewGuid()},
-            new Owner {Name = "Toby Wider", Id = Guid.NewGuid()},
-            new Owner {Name = "Daka Dusk", Id = Guid.NewGuid()}
-        };
+            _ownerCollectionService = ownerCollectionService ?? throw new ArgumentNullException(nameof(ownerCollectionService));
+        }
+
 
         /// <summary>
         /// Gets all the owners
@@ -27,7 +29,7 @@ namespace NotesAPI.Controllers
         [HttpGet]
         public IActionResult GetOwners()
         {
-            return Ok(_owners);
+            return Ok(_ownerCollectionService.GetAll());
         }
 
         /// <summary>
@@ -39,7 +41,10 @@ namespace NotesAPI.Controllers
         [HttpPost]
         public IActionResult AddOwner([FromBody] Owner owner)
         {
-            _owners.Add(owner);
+            if(!_ownerCollectionService.Create(owner))
+            {
+                return BadRequest("Owner can't be null");
+            }
             return Ok(owner);
         }
 
@@ -58,17 +63,12 @@ namespace NotesAPI.Controllers
                 return BadRequest("Owner shall not be null");
             }
 
-            int index = _owners.FindIndex(ownr => ownr.Id == id);
-
-            if(index == -1)
+            if(!_ownerCollectionService.Update(id, owner))
             {
                 return NotFound("Owner not found");
             }
 
-            owner.Id = id;
-            _owners[index] = owner;
-
-            return Ok(_owners);
+            return Ok(_ownerCollectionService.GetAll());
         }
 
         /// <summary>
@@ -80,15 +80,12 @@ namespace NotesAPI.Controllers
         [HttpDelete("{id}")]
         public IActionResult RemoveOwner(Guid id)
         {
-            int index = _owners.FindIndex(ownr => ownr.Id == id);
-
-            if (index == -1)
+            if(!_ownerCollectionService.Delete(id))
             {
                 return NotFound("Owner not found");
             }
 
-            _owners.RemoveAt(index);
-            return Ok(_owners);
+            return Ok(_ownerCollectionService.GetAll());
         }
     }
 }

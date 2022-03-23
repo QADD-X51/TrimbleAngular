@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using NotesAPI.Models;
+using NotesAPI.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,17 +13,12 @@ namespace NotesAPI.Controllers
     [ApiController]
     public class NotesController : ControllerBase
     {
-        public NotesController() { }
+        INoteCollectionService _noteCollectionService;
 
-        private static List<Note> _notes = new List<Note> 
-        { 
-            new Note { Id = new Guid("00000000-0000-0000-0000-000000000001"), CategoryId = "1", OwnerId = new Guid("00000000-0000-0000-0000-000000000001"), Title = "First Note", Description = "First Note Description" },
-            new Note { Id = new Guid("00000000-0000-0000-0000-000000000002"), CategoryId = "1", OwnerId = new Guid("00000000-0000-0000-0000-000000000001"), Title = "Second Note", Description = "Second Note Description" },
-            new Note { Id = new Guid("00000000-0000-0000-0000-000000000003"), CategoryId = "1", OwnerId = new Guid("00000000-0000-0000-0000-000000000001"), Title = "Third Note", Description = "Third Note Description" },
-            new Note { Id = new Guid("00000000-0000-0000-0000-000000000004"), CategoryId = "1", OwnerId = new Guid("00000000-0000-0000-0000-000000000001"), Title = "Fourth Note", Description = "Fourth Note Description" },
-            new Note { Id = new Guid("00000000-0000-0000-0000-000000000005"), CategoryId = "1", OwnerId = new Guid("00000000-0000-0000-0000-000000000001"), Title = "Fifth Note", Description = "Fifth Note Description" }
-        };
-
+        public NotesController(INoteCollectionService noteCollectionService) 
+        {
+            _noteCollectionService = noteCollectionService ?? throw new ArgumentNullException(nameof(noteCollectionService)); //if right side of = is null, throw exception
+        }
 
 
         /// <summary>
@@ -33,7 +29,7 @@ namespace NotesAPI.Controllers
         [HttpGet]
         public IActionResult GetNotes()
         {
-            return Ok(_notes);
+            return Ok(_noteCollectionService.GetAll());
         }
 
         /// <summary>
@@ -45,7 +41,7 @@ namespace NotesAPI.Controllers
         [HttpGet("owner:{id}")]
         public IActionResult GetNotesByOwner(Guid id)
         {
-            return Ok(_notes.Where(note => note.OwnerId == id));
+            return Ok(_noteCollectionService.GetNotesByOwner(id));
         }
 
         /// <summary>
@@ -57,7 +53,14 @@ namespace NotesAPI.Controllers
         [HttpGet("{id}")]
         public IActionResult GetNotesID(Guid id)
         {
-            return Ok(_notes.Where(note => note.Id == id));
+            try
+            {
+                return Ok(_noteCollectionService.Get(id));
+            }
+            catch(Exception e)
+            {
+                return NotFound("Note not found");
+            }
         }
 
         /// <summary>
@@ -72,8 +75,8 @@ namespace NotesAPI.Controllers
             {
                 return BadRequest("Note should not be null");
             }
-            _notes.Add(note);
-            return Ok(note);
+            _noteCollectionService.Create(note);
+            return Ok(_noteCollectionService.GetAll());
         }
 
         /// <summary>
@@ -90,17 +93,12 @@ namespace NotesAPI.Controllers
                 return BadRequest("Note should not be null");
             }
 
-            int index = _notes.FindIndex(n => n.Id == id);
-
-            if(index == -1)
+            if(!_noteCollectionService.Update(id, note))
             {
-                //return NotFound("Note ID not found");
-                return CreateNote(note);
+                return NotFound("Note not found");
             }
 
-            note.Id = id;
-            _notes[index] = note;
-            return Ok(_notes);
+            return Ok(_noteCollectionService.GetAll());
         }
 
         /// <summary>
@@ -112,15 +110,12 @@ namespace NotesAPI.Controllers
         [HttpDelete("{id}")]
         public IActionResult DeleteNote(Guid id)
         {
-            int index = _notes.FindIndex(n => n.Id == id);
-
-            if(index == -1)
+            if(!_noteCollectionService.Delete(id))
             {
                 return NotFound("Note not found");
             }
 
-            _notes.RemoveAt(index);
-            return Ok(_notes);
+            return Ok(_noteCollectionService.GetAll());
         }
 
         /// <summary>
@@ -136,20 +131,15 @@ namespace NotesAPI.Controllers
         {
             if (note == null)
             {
-                return BadRequest("Updated note should not be null");
+                return BadRequest("Note should not be null");
             }
 
-            int index = _notes.FindIndex(n => n.Id == idNote && n.OwnerId == idOwner);
-
-            if (index == -1)
+            if (!_noteCollectionService.UpdateAdvanced(idOwner, idNote, note))
             {
                 return NotFound("Note not found");
             }
 
-            note.Id = idNote;
-            note.OwnerId = idOwner;
-            _notes[index] = note;
-            return Ok(_notes);
+            return Ok(_noteCollectionService.GetAll());
         }
 
         /// <summary>
@@ -162,15 +152,12 @@ namespace NotesAPI.Controllers
         [HttpDelete("{idOwner}/{idNote}")]
         public IActionResult DeleteNoteAdvanced(Guid idOwner, Guid idNote)
         {
-            int index = _notes.FindIndex(n => n.Id == idNote && n.OwnerId == idOwner);
-
-            if (index == -1)
+            if (!_noteCollectionService.DeleteNoteAdvanced(idOwner, idNote))
             {
                 return NotFound("Note not found");
             }
 
-            _notes.RemoveAt(index);
-            return Ok(_notes);
+            return Ok(_noteCollectionService.GetAll());
         }
 
         /// <summary>
@@ -182,12 +169,12 @@ namespace NotesAPI.Controllers
         [HttpDelete("owner:{id}")]
         public IActionResult DeleteAllNotesOfOwner(Guid id)
         {
-            if(_notes.RemoveAll(note => note.OwnerId == id) == 0)
+            if(!_noteCollectionService.DeleteAllNotesOfUser(id))
             {
-                return NotFound("Owner has no notes");
+                return NotFound("Notes not found");
             }
 
-            return Ok(_notes);
+            return Ok(_noteCollectionService.GetAll());
         }
     }
 }
