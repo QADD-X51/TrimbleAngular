@@ -40,6 +40,11 @@ namespace NotesAPI.Services
 
         public async Task<bool> Create(Note note)
         {
+            if(note.Id == Guid.Empty)
+            {
+                note.Id = Guid.NewGuid();
+            }
+            note.OwnerId = Guid.NewGuid();
             await _notes.InsertOneAsync(note);
             return true;
         }

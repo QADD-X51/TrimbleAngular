@@ -19,9 +19,9 @@ import { HomeComponent } from './home/home.component';
 import { DummyrouteComponent } from './dummyroute/dummyroute.component';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
-import { HttpMockApiInterceptor } from './services/http-mock-api.interceptor';
 import {MatSelectModule} from '@angular/material/select';
 import { EditNoteComponent } from './edit-note/edit-note.component';
+import { NoteService } from './services/note.service';
 
 @NgModule({
   declarations: [
@@ -48,12 +48,7 @@ import { EditNoteComponent } from './edit-note/edit-note.component';
     HttpClientModule,
     MatSelectModule
   ],
-  providers: [{
-    provide: HTTP_INTERCEPTORS,
-    useClass: HttpMockApiInterceptor,
-    multi: true
-  }
-],
+  providers: [NoteService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
